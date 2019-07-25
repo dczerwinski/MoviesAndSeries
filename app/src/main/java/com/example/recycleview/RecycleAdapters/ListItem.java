@@ -5,6 +5,7 @@ public abstract class ListItem {
     public static final int TYPE_SERIES = 2;
     public static final int TYPE_MOVIE = 1;
     public String category;
+
     public String getCategory() {
         return category;
     }
@@ -12,7 +13,7 @@ public abstract class ListItem {
     abstract public int getType();
 }
 
-class HeaderItem extends ListItem{
+class HeaderItem extends ListItem {
 
 
     public HeaderItem(String name) {
@@ -25,14 +26,15 @@ class HeaderItem extends ListItem{
     }
 }
 
-class SeriesItem extends ListItem{
+class SeriesItem extends ListItem {
 
     private String title;
     private String director;
     private String img_file;
     private int numer_of_episodes;
 
-    public SeriesItem(String title, String director, String img_file, int numer_of_episodes, String category) {
+    public SeriesItem(String title, String director, String img_file, int numer_of_episodes,
+            String category) {
         this.title = title;
         this.director = director;
         this.img_file = img_file;
@@ -66,7 +68,7 @@ class SeriesItem extends ListItem{
     }
 }
 
-class MovieItem extends ListItem{
+class MovieItem extends ListItem {
     private String title;
     private String director;
     private String img_file;

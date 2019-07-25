@@ -20,13 +20,14 @@ import com.example.recycleview.DataBase.DataBase;
 import com.example.recycleview.MovieActivity;
 import com.example.recycleview.R;
 import com.example.recycleview.SeriesActivity;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 
-class RecyclerViewHolder extends RecyclerView.ViewHolder{
+class RecyclerViewHolder extends RecyclerView.ViewHolder {
     TextView mTextView;
     ImageView mImageView;
 
@@ -35,11 +36,12 @@ class RecyclerViewHolder extends RecyclerView.ViewHolder{
         mTextView = itemView.findViewById(R.id.txtDescription);
     }
 
-    public void setTextViewBackground(Context context,String id){
+    public void setTextViewBackground(Context context, String id) {
         mImageView = itemView.findViewById(R.id.imageView_item);
-        int resID = context.getResources().getIdentifier(id,"drawable",context.getPackageName());
-        Bitmap bitmapFactory = BitmapFactory.decodeResource(context.getResources(),resID);
-        RoundedBitmapDrawable rnd = RoundedBitmapDrawableFactory.create(context.getResources(),bitmapFactory);
+        int resID = context.getResources().getIdentifier(id, "drawable", context.getPackageName());
+        Bitmap bitmapFactory = BitmapFactory.decodeResource(context.getResources(), resID);
+        RoundedBitmapDrawable rnd =
+                RoundedBitmapDrawableFactory.create(context.getResources(), bitmapFactory);
         rnd.setCornerRadius(90);
         this.mImageView.setImageDrawable(rnd);
     }
@@ -58,7 +60,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     }
 
 
-    public RecyclerAdapter(List<DataBase> dataBaseList, Context context){
+    public RecyclerAdapter(List<DataBase> dataBaseList, Context context) {
         this.dataBases = dataBaseList;
         this.context = context;
         init_no_main();
@@ -73,31 +75,41 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        switch (viewType){
+        switch (viewType) {
             case ListItem.TYPE_HEADER:
-                return new RecyclerViewHolder(inflater.inflate(R.layout.layout_item_recycler_view_category,parent,false));
+                return new RecyclerViewHolder(
+                        inflater.inflate(R.layout.layout_item_recycler_view_category, parent,
+                                false));
             case ListItem.TYPE_MOVIE:
-                return new RecyclerViewHolder(inflater.inflate(R.layout.layout_item_recycler_view,parent,false));
+                return new RecyclerViewHolder(
+                        inflater.inflate(R.layout.layout_item_recycler_view, parent, false));
             case ListItem.TYPE_SERIES:
-                return new RecyclerViewHolder(inflater.inflate(R.layout.layout_item_recycler_view_series,parent,false));
+                return new RecyclerViewHolder(
+                        inflater.inflate(R.layout.layout_item_recycler_view_series, parent, false));
             default:
                 throw new IllegalStateException("unsupported item type");
         }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull  RecyclerViewHolder mRecyclerViewHolder, final int position) {
-        switch (getItemViewType(position)){
+    public void onBindViewHolder(@NonNull RecyclerViewHolder mRecyclerViewHolder,
+            final int position) {
+        switch (getItemViewType(position)) {
             case ListItem.TYPE_HEADER:
-                mRecyclerViewHolder.mTextView.setText(((List<HeaderItem>)(Object)items).get(position).getCategory());
+                mRecyclerViewHolder.mTextView
+                        .setText(((List<HeaderItem>) (Object) items).get(position).getCategory());
                 break;
             case ListItem.TYPE_MOVIE:
-                mRecyclerViewHolder.mTextView.setText(((List<MovieItem>)(Object)items).get(position).getTitle());
-                mRecyclerViewHolder.setTextViewBackground(context,((List<MovieItem>)(Object)items).get(position).getImg_file());
+                mRecyclerViewHolder.mTextView
+                        .setText(((List<MovieItem>) (Object) items).get(position).getTitle());
+                mRecyclerViewHolder.setTextViewBackground(context,
+                        ((List<MovieItem>) (Object) items).get(position).getImg_file());
                 break;
             case ListItem.TYPE_SERIES:
-                mRecyclerViewHolder.mTextView.setText(((List<SeriesItem>)(Object)items).get(position).getTitle());
-                mRecyclerViewHolder.setTextViewBackground(context,((List<SeriesItem>)(Object)items).get(position).getImg_file());
+                mRecyclerViewHolder.mTextView
+                        .setText(((List<SeriesItem>) (Object) items).get(position).getTitle());
+                mRecyclerViewHolder.setTextViewBackground(context,
+                        ((List<SeriesItem>) (Object) items).get(position).getImg_file());
                 break;
             default:
                 throw new IllegalStateException("unsupported item type");
@@ -106,22 +118,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         mRecyclerViewHolder.mTextView.getRootView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (getItemViewType(position)){
+                switch (getItemViewType(position)) {
                     case ListItem.TYPE_MOVIE:
                         Intent intent = new Intent(v.getContext(), MovieActivity.class);
-                        intent.putExtra("elo",AppDatabase.getAppDatabase(context).dataBaseDao().findByName(((List<MovieItem>)(Object)items).get(position).getTitle()).uid);
+                        intent.putExtra("elo", AppDatabase.getAppDatabase(context).dataBaseDao()
+                                .findByName(((List<MovieItem>) (Object) items).get(position)
+                                        .getTitle()).uid);
                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         v.getContext().startActivity(intent);
                         break;
                     case ListItem.TYPE_SERIES:
                         Intent intent2 = new Intent(v.getContext(), SeriesActivity.class);
-                        intent2.putExtra("elo",AppDatabase.getAppDatabase(context).dataBaseDao().findByName(((List<SeriesItem>)(Object)items).get(position).getTitle()).uid);
+                        intent2.putExtra("elo", AppDatabase.getAppDatabase(context).dataBaseDao()
+                                .findByName(((List<SeriesItem>) (Object) items).get(position)
+                                        .getTitle()).uid);
                         intent2.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         v.getContext().startActivity(intent2);
                         break;
                     case ListItem.TYPE_HEADER:
                         Intent intent3 = new Intent(v.getContext(), CategoryActivity.class);
-                        intent3.putExtra("elo",((List<HeaderItem>)(Object)items).get(position).getCategory());
+                        intent3.putExtra("elo",
+                                ((List<HeaderItem>) (Object) items).get(position).getCategory());
                         intent3.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         v.getContext().startActivity(intent3);
                         break;
@@ -131,7 +148,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     }
 
     @Override
-    public int getItemViewType(int position){
+    public int getItemViewType(int position) {
         return items.get(position).getType();
     }
 
@@ -140,7 +157,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         return items.size();
     }
 
-    private void init(){
+    private void init() {
         Collections.sort(dataBases, new Comparator<DataBase>() {
             @Override
             public int compare(DataBase t0, DataBase t1) {
@@ -151,16 +168,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         Collections.reverse(dataBases);
 
         List<String> categories = new ArrayList<>();
-        for(DataBase dataBase: dataBases){
-            switch (dataBase.type){
+        for (DataBase dataBase : dataBases) {
+            switch (dataBase.type) {
                 case "movie":
-                    items.add(new MovieItem(dataBase.title,dataBase.director,dataBase.img_file,dataBase.category));
+                    items.add(new MovieItem(dataBase.title, dataBase.director, dataBase.img_file,
+                            dataBase.category));
                     break;
                 case "series":
-                    items.add(new SeriesItem(dataBase.title,dataBase.director,dataBase.img_file,dataBase.number,dataBase.category));
+                    items.add(new SeriesItem(dataBase.title, dataBase.director, dataBase.img_file,
+                            dataBase.number, dataBase.category));
                     break;
             }
-            if(!categories.contains(dataBase.category)){
+            if (!categories.contains(dataBase.category)) {
                 categories.add(dataBase.category);
             }
         }
@@ -171,7 +190,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
             }
         });
 
-        for(String category: categories){
+        for (String category : categories) {
             items.add(new HeaderItem(category));
         }
         Collections.reverse(items);
@@ -183,28 +202,34 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         });
     }
 
-    private void init_no_main(){
+    private void init_no_main() {
         Collections.sort(dataBases, new Comparator<DataBase>() {
             @Override
             public int compare(DataBase t0, DataBase t1) {
                 return t0.title.compareTo(t1.title);
             }
         });
-        for(DataBase dataBase: dataBases){
-            switch (dataBase.type){
+        for (DataBase dataBase : dataBases) {
+            switch (dataBase.type) {
                 case "movie":
-                    items.add(new MovieItem(dataBase.title,dataBase.director,dataBase.img_file,dataBase.category));
+                    items.add(new MovieItem(dataBase.title, dataBase.director, dataBase.img_file,
+                            dataBase.category));
                     break;
                 case "series":
-                    items.add(new SeriesItem(dataBase.title,dataBase.director,dataBase.img_file,dataBase.number,dataBase.category));
+                    items.add(new SeriesItem(dataBase.title, dataBase.director, dataBase.img_file,
+                            dataBase.number, dataBase.category));
                     break;
             }
         }
     }
 
-    public boolean canDropOver(int current,int target){
-        if(!items.get(current).category.equals(items.get(target).category) )return false;
-        if(items.get(target).getType() == ListItem.TYPE_HEADER)return false;
+    public boolean canDropOver(int current, int target) {
+        if (!items.get(current).category.equals(items.get(target).category)) {
+            return false;
+        }
+        if (items.get(target).getType() == ListItem.TYPE_HEADER) {
+            return false;
+        }
         return true;
     }
 }

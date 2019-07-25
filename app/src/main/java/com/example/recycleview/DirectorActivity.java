@@ -1,20 +1,24 @@
 package com.example.recycleview;
 
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
 import com.example.recycleview.DataBase.AppDatabase;
 import com.example.recycleview.RecycleAdapters.ItemDecoration;
 import com.example.recycleview.RecycleAdapters.ListItem;
 import com.example.recycleview.RecycleAdapters.RecyclerAdapter;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DirectorActivity extends AppCompatActivity {
-    @BindView(R.id.recycle_director) RecyclerView mRecyclerView;
-    @BindView(R.id.collapsing_toolbar_layout_director) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.recycle_director)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.collapsing_toolbar_layout_director)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
 
 
     @Override
@@ -27,7 +31,8 @@ public class DirectorActivity extends AppCompatActivity {
 
         mCollapsingToolbarLayout.setTitle(director);
 
-        final RecyclerAdapter mRecyclerAdapter = new RecyclerAdapter(AppDatabase.getAppDatabase(this).dataBaseDao().findByDirector(director), this);
+        final RecyclerAdapter mRecyclerAdapter = new RecyclerAdapter(
+                AppDatabase.getAppDatabase(this).dataBaseDao().findByDirector(director), this);
 
         ItemDecoration mItemDecoration = new ItemDecoration(80);
 
@@ -43,8 +48,9 @@ public class DirectorActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(mItemDecoration);
         mRecyclerView.setAdapter(mRecyclerAdapter);
     }
+
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         AppDatabase.destroyInstance();
         super.onDestroy();
     }
