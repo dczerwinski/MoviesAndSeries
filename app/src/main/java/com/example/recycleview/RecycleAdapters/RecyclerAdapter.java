@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.recycleview.CategoryActivity;
 import com.example.recycleview.DataBase.AppDatabase;
@@ -28,21 +27,21 @@ import java.util.List;
 
 
 class RecyclerViewHolder extends RecyclerView.ViewHolder{
-    TextView textView;
-    ImageView imageView;
+    TextView mTextView;
+    ImageView mImageView;
 
     public RecyclerViewHolder(@NonNull View itemView) {
         super(itemView);
-        textView = itemView.findViewById(R.id.txtDescription);
+        mTextView = itemView.findViewById(R.id.txtDescription);
     }
 
     public void setTextViewBackground(Context context,String id){
-        imageView = itemView.findViewById(R.id.imageView_item);
+        mImageView = itemView.findViewById(R.id.imageView_item);
         int resID = context.getResources().getIdentifier(id,"drawable",context.getPackageName());
         Bitmap bitmapFactory = BitmapFactory.decodeResource(context.getResources(),resID);
         RoundedBitmapDrawable rnd = RoundedBitmapDrawableFactory.create(context.getResources(),bitmapFactory);
         rnd.setCornerRadius(90);
-        this.imageView.setImageDrawable(rnd);
+        this.mImageView.setImageDrawable(rnd);
     }
 }
 
@@ -90,21 +89,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     public void onBindViewHolder(@NonNull  RecyclerViewHolder mRecyclerViewHolder, final int position) {
         switch (getItemViewType(position)){
             case ListItem.TYPE_HEADER:
-                mRecyclerViewHolder.textView.setText(((List<HeaderItem>)(Object)items).get(position).getCategory());
+                mRecyclerViewHolder.mTextView.setText(((List<HeaderItem>)(Object)items).get(position).getCategory());
                 break;
             case ListItem.TYPE_MOVIE:
-                mRecyclerViewHolder.textView.setText(((List<MovieItem>)(Object)items).get(position).getTitle());
+                mRecyclerViewHolder.mTextView.setText(((List<MovieItem>)(Object)items).get(position).getTitle());
                 mRecyclerViewHolder.setTextViewBackground(context,((List<MovieItem>)(Object)items).get(position).getImg_file());
                 break;
             case ListItem.TYPE_SERIES:
-                mRecyclerViewHolder.textView.setText(((List<SeriesItem>)(Object)items).get(position).getTitle());
+                mRecyclerViewHolder.mTextView.setText(((List<SeriesItem>)(Object)items).get(position).getTitle());
                 mRecyclerViewHolder.setTextViewBackground(context,((List<SeriesItem>)(Object)items).get(position).getImg_file());
                 break;
             default:
                 throw new IllegalStateException("unsupported item type");
         }
 
-        mRecyclerViewHolder.textView.getRootView().setOnClickListener(new View.OnClickListener() {
+        mRecyclerViewHolder.mTextView.getRootView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (getItemViewType(position)){

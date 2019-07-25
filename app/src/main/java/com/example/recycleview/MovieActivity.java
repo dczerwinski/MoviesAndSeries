@@ -1,6 +1,5 @@
 package com.example.recycleview;
 
-import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -16,14 +15,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MovieActivity extends AppCompatActivity {
-    @BindView(R.id.collapsing_toolbar_layout_movie) CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.collapsing_toolbar_layout_movie) CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.rezyser_movie) TextView tv_rezyser;
     @BindView(R.id.opis_movie)TextView tv_opis;
     @BindView(R.id.recenzja_movie)TextView tv_recenzja;
     @BindView(R.id.aktorzy_movie)TextView tv_aktorzy;
     @BindView(R.id.gora_movie) ImageView imageView;
-    @BindView(R.id.app_bar_movie) AppBarLayout appBarLayout;
-    @BindView(R.id.toolbar_movie) Toolbar toolbar;
+    @BindView(R.id.app_bar_movie) AppBarLayout mAppBarLayout;
+    @BindView(R.id.toolbar_movie) Toolbar mToolbar;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -49,14 +48,14 @@ public class MovieActivity extends AppCompatActivity {
         }
 
 
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                if (i == -collapsingToolbarLayout.getHeight() + toolbar.getHeight()) {
-                    collapsingToolbarLayout.setTitle(movie.title);
+                if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
+                    mCollapsingToolbarLayout.setTitle(movie.title);
                 }
                 else{
-                    collapsingToolbarLayout.setTitle("");
+                    mCollapsingToolbarLayout.setTitle("");
                 }
             }
         });

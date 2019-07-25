@@ -1,6 +1,5 @@
 package com.example.recycleview;
 
-import android.arch.persistence.room.Room;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -21,12 +20,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CategoryActivity  extends AppCompatActivity {
-    @BindView(R.id.recycle_category) RecyclerView recyclerView;
-    @BindView(R.id.collapsing_toolbar_layout_category) CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.app_bar_category) AppBarLayout appBarLayout;
-    @BindView(R.id.toolbar_category) Toolbar toolbar;
+    @BindView(R.id.recycle_category) RecyclerView mRecyclerView;
+    @BindView(R.id.collapsing_toolbar_layout_category) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.app_bar_category) AppBarLayout mAppBarLayout;
+    @BindView(R.id.toolbar_category) Toolbar mToolbar;
     @BindView(R.id.title_category) TextView tv_title;
-    ItemTouchHelper helper;
+    ItemTouchHelper mItemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +36,14 @@ public class CategoryActivity  extends AppCompatActivity {
         final String title = getIntent().getExtras().getString("elo");
         tv_title.setText("\n"+title);
         tv_title.setTextSize(50);
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                if (i == -collapsingToolbarLayout.getHeight() + toolbar.getHeight()) {
-                    collapsingToolbarLayout.setTitle(title);
+                if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
+                    mCollapsingToolbarLayout.setTitle(title);
                 }
                 else{
-                    collapsingToolbarLayout.setTitle("");
+                    mCollapsingToolbarLayout.setTitle("");
                 }
             }
         });
@@ -52,24 +51,24 @@ public class CategoryActivity  extends AppCompatActivity {
 
         List<DataBase> dataBases = AppDatabase.getAppDatabase(this).dataBaseDao().findByCategory(title);
 
-        final RecyclerAdapter recyclerAdapter = new RecyclerAdapter(dataBases,this);
-        ItemDecoration itemDecoration = new ItemDecoration(80);
+        final RecyclerAdapter mRecyclerAdapter = new RecyclerAdapter(dataBases,this);
+        ItemDecoration mItemDecoration = new ItemDecoration(80);
 
-        GridLayoutManager manager = new GridLayoutManager(this, 2);
-        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
+        mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {
-                return recyclerAdapter.getItems().get(i).getType() == ListItem.TYPE_SERIES ? 1 : 2;
+                return mRecyclerAdapter.getItems().get(i).getType() == ListItem.TYPE_SERIES ? 1 : 2;
             }
         });
 
-        recyclerView.setLayoutManager(manager);
-        recyclerView.addItemDecoration(itemDecoration);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mRecyclerView.addItemDecoration(mItemDecoration);
 
-        helper = new ItemTouchHelper(new MyItemTouchHelperCallback(recyclerAdapter));
-        helper.attachToRecyclerView(recyclerView);
+        mItemTouchHelper = new ItemTouchHelper(new MyItemTouchHelperCallback(mRecyclerAdapter));
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
-        recyclerView.setAdapter(recyclerAdapter);
+        mRecyclerView.setAdapter(mRecyclerAdapter);
     }
 
 

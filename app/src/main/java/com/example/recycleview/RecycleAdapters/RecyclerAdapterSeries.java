@@ -38,7 +38,7 @@ public class RecyclerAdapterSeries extends RecyclerView.Adapter<RecyclerViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder recyclerViewHolder, final int i) {
-        recyclerViewHolder.textView.setText(episodes.get(i%episodes.size()));
+        recyclerViewHolder.mTextView.setText(episodes.get(i%episodes.size()));
         recyclerViewHolder.setTextViewBackground(context,series.img_file);
     }
 

@@ -1,6 +1,5 @@
 package com.example.recycleview;
 
-import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -23,12 +22,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SeriesActivity extends AppCompatActivity{
-    @BindView(R.id.collapsing_toolbar_layout_series) CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.collapsing_toolbar_layout_series) CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.gora_series) ImageView imageView;
-    @BindView(R.id.recycle_series) RecyclerView recyclerView;
+    @BindView(R.id.recycle_series) RecyclerView mRecyclerView;
     @BindView(R.id.rezyser_series) TextView tv_rezyser;
-    @BindView(R.id.app_bar_series) AppBarLayout appBarLayout;
-    @BindView(R.id.toolbar_series) Toolbar toolbar;
+    @BindView(R.id.app_bar_series) AppBarLayout mAppBarLayout;
+    @BindView(R.id.toolbar_series) Toolbar mToolbar;
     private DataBase series;
 
 
@@ -49,14 +48,14 @@ public class SeriesActivity extends AppCompatActivity{
         int uid = getIntent().getExtras().getInt("elo");
         series = AppDatabase.getAppDatabase(this).dataBaseDao().findById(uid);
 
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                if (i == -collapsingToolbarLayout.getHeight() + toolbar.getHeight()) {
-                    collapsingToolbarLayout.setTitle(series.title);
+                if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
+                    mCollapsingToolbarLayout.setTitle(series.title);
                 }
                 else{
-                    collapsingToolbarLayout.setTitle("");
+                    mCollapsingToolbarLayout.setTitle("");
                 }
             }
         });
@@ -64,17 +63,17 @@ public class SeriesActivity extends AppCompatActivity{
         tv_rezyser.setText("Rezyser: " + series.director);
         imageView.setImageResource(this.getResources().getIdentifier(series.img_file,"drawable",this.getPackageName()));
 
-        final RecyclerAdapterSeries recyclerAdapterSeries = new RecyclerAdapterSeries(series,this);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        final RecyclerAdapterSeries mRecyclerAdapterSeries = new RecyclerAdapterSeries(series,this);
+        final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new ItemDecoration(80));
-        recyclerView.setAdapter(recyclerAdapterSeries);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.addItemDecoration(new ItemDecoration(80));
+        mRecyclerView.setAdapter(mRecyclerAdapterSeries);
 
-        final List<String> itemList = recyclerAdapterSeries.getEpisodes();
+        final List<String> itemList = mRecyclerAdapterSeries.getEpisodes();
 
-        recyclerView.scrollToPosition(1);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerView.scrollToPosition(1);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -84,13 +83,13 @@ public class SeriesActivity extends AppCompatActivity{
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 Log.d("elo",String.valueOf(dx)+"  "+String.valueOf(dy));
-                int firstItemVisible = layoutManager.findFirstVisibleItemPosition();
+                int firstItemVisible = mLinearLayoutManager.findFirstVisibleItemPosition();
                 if (firstItemVisible != 1 && firstItemVisible % itemList.size() == 1) {
-                    layoutManager.scrollToPosition(1);
+                    mLinearLayoutManager.scrollToPosition(1);
                 }
-                int firstCompletelyItemVisible = layoutManager.findFirstCompletelyVisibleItemPosition();
+                int firstCompletelyItemVisible = mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();
                 if (firstCompletelyItemVisible == 0) {
-                    layoutManager.scrollToPositionWithOffset(itemList.size(), 0);
+                    mLinearLayoutManager.scrollToPositionWithOffset(itemList.size(), 0);
                 }
             }
 

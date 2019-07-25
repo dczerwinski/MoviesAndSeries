@@ -20,11 +20,11 @@ import butterknife.ButterKnife;
 
 
 public class MainActivity extends AppCompatActivity{
-    @BindView(R.id.recycle) RecyclerView recyclerView;
-    @BindView(R.id.collapsing_toolbar_layout) CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.app_bar) AppBarLayout appBarLayout;
-    @BindView(R.id.toolbar)Toolbar toolbar;
-    ItemTouchHelper helper;
+    @BindView(R.id.recycle) RecyclerView mRecyclerView;
+    @BindView(R.id.collapsing_toolbar_layout) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.app_bar) AppBarLayout mAppBarLayout;
+    @BindView(R.id.toolbar)Toolbar mToolbar;
+    ItemTouchHelper mItemTouchHelper;
 
     @SuppressLint("WrongThread")
     @Override
@@ -33,10 +33,10 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        final RecyclerAdapter recyclerAdapter = new RecyclerAdapter(this);
+        final RecyclerAdapter mRecyclerAdapter = new RecyclerAdapter(this);
 
 
-        appBarLayout.setOnLongClickListener(new View.OnLongClickListener() {
+        mAppBarLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 Toast.makeText(view.getContext(), "Edit Mode ON", Toast.LENGTH_LONG).show();
@@ -44,33 +44,33 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                if (i == -collapsingToolbarLayout.getHeight() + toolbar.getHeight()) {
-                    collapsingToolbarLayout.setTitle("Filmy i seriale");
+                if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
+                    mCollapsingToolbarLayout.setTitle("Filmy i seriale");
                 }
                 else{
-                    collapsingToolbarLayout.setTitle("");
+                    mCollapsingToolbarLayout.setTitle("");
                 }
             }
         });
 
-        ItemDecoration itemDecoration = new ItemDecoration(80);
+        ItemDecoration mItemDecoration = new ItemDecoration(80);
 
-        GridLayoutManager manager = new GridLayoutManager(this, 2);
-        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
+        mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {
-                return recyclerAdapter.getItems().get(i).getType() == ListItem.TYPE_SERIES ? 1 : 2;
+                return mRecyclerAdapter.getItems().get(i).getType() == ListItem.TYPE_SERIES ? 1 : 2;
             }
         });
 
-        recyclerView.setLayoutManager(manager);
-        recyclerView.addItemDecoration(itemDecoration);
-        helper = new ItemTouchHelper(new MyItemTouchHelperCallback(recyclerAdapter));
-        helper.attachToRecyclerView(recyclerView);
-        recyclerView.setAdapter(recyclerAdapter);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mRecyclerView.addItemDecoration(mItemDecoration);
+        mItemTouchHelper = new ItemTouchHelper(new MyItemTouchHelperCallback(mRecyclerAdapter));
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+        mRecyclerView.setAdapter(mRecyclerAdapter);
     }
 }
 

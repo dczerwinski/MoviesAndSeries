@@ -13,10 +13,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DirectorActivity extends AppCompatActivity {
-    @BindView(R.id.recycle_director)
-    RecyclerView recyclerView;
-    @BindView(R.id.collapsing_toolbar_layout_director)
-    CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.recycle_director) RecyclerView mRecyclerView;
+    @BindView(R.id.collapsing_toolbar_layout_director) CollapsingToolbarLayout mCollapsingToolbarLayout;
 
 
     @Override
@@ -27,23 +25,23 @@ public class DirectorActivity extends AppCompatActivity {
 
         String director = getIntent().getExtras().getString("dir");
 
-        collapsingToolbarLayout.setTitle(director);
+        mCollapsingToolbarLayout.setTitle(director);
 
-        final RecyclerAdapter recyclerAdapter = new RecyclerAdapter(AppDatabase.getAppDatabase(this).dataBaseDao().findByDirector(director), this);
+        final RecyclerAdapter mRecyclerAdapter = new RecyclerAdapter(AppDatabase.getAppDatabase(this).dataBaseDao().findByDirector(director), this);
 
-        ItemDecoration itemDecoration = new ItemDecoration(80);
+        ItemDecoration mItemDecoration = new ItemDecoration(80);
 
-        GridLayoutManager manager = new GridLayoutManager(this, 2);
-        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
+        mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {
-                return recyclerAdapter.getItems().get(i).getType() == ListItem.TYPE_SERIES ? 1 : 2;
+                return mRecyclerAdapter.getItems().get(i).getType() == ListItem.TYPE_SERIES ? 1 : 2;
             }
         });
 
-        recyclerView.setLayoutManager(manager);
-        recyclerView.addItemDecoration(itemDecoration);
-        recyclerView.setAdapter(recyclerAdapter);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mRecyclerView.addItemDecoration(mItemDecoration);
+        mRecyclerView.setAdapter(mRecyclerAdapter);
     }
     @Override
     protected void onDestroy(){
