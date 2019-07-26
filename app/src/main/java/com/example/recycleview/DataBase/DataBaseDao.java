@@ -32,4 +32,7 @@ public interface DataBaseDao {
 
     @Delete
     void delete(DataBase dataBase);
+
+    @Insert
+    void insertAll(List<DataBase> dataBases);
 }
