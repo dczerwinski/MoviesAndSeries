@@ -8,10 +8,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.recycleview.CategoryActivity;
@@ -52,8 +56,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     public List<ListItem> items = new ArrayList<>();
     private Context context;
     private List<DataBase> dataBases;
+    private ItemTouchHelper mItemTouchHelper;
+    private PopupMenu popupMenu;
+
+    public void hideMenu(){
+        if(popupMenu!=null) popupMenu.dismiss();
+    }
+
+    public void setmItemTouchHelper(ItemTouchHelper mItemTouchHelper) {
+        this.mItemTouchHelper = mItemTouchHelper;
+    }
 
     public RecyclerAdapter(Context context) {
+        popupMenu = null;
+        mItemTouchHelper=null;
         dataBases = AppDatabase.getAppDatabase(context).dataBaseDao().getAll();
         this.context = context;
         init();
@@ -61,6 +77,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
 
     public RecyclerAdapter(List<DataBase> dataBaseList, Context context) {
+        popupMenu = null;
+        mItemTouchHelper=null;
         this.dataBases = dataBaseList;
         this.context = context;
         init_no_main();
@@ -92,7 +110,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewHolder mRecyclerViewHolder,
+    public void onBindViewHolder(@NonNull final RecyclerViewHolder mRecyclerViewHolder,
             final int position) {
         switch (getItemViewType(position)) {
             case ListItem.TYPE_HEADER:
@@ -114,6 +132,38 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
             default:
                 throw new IllegalStateException("unsupported item type");
         }
+
+
+        mRecyclerViewHolder.mTextView.getRootView().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View view) {
+
+                if(getItemViewType(position) != ListItem.TYPE_HEADER) {
+                    popupMenu = new PopupMenu(context, view);
+                    MenuInflater inflater = popupMenu.getMenuInflater();
+                    inflater.inflate(R.menu.item_menu, popupMenu.getMenu());
+                    // popupMenu.setGravity();
+                    popupMenu.show();
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            if (menuItem.getTitle().equals("Edit")){
+                                Intent intent = new Intent(view.getContext(), EditItemActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                view.getContext().startActivity(intent);
+                            }
+                            else{
+                                //TODO
+                            }
+                            return true;
+                        }
+                    });
+                }
+                if(mItemTouchHelper!=null) mItemTouchHelper.startDrag(mRecyclerViewHolder);
+                return true;
+            }
+        });
 
         mRecyclerViewHolder.mTextView.getRootView().setOnClickListener(new View.OnClickListener() {
             @Override

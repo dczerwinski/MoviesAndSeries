@@ -76,6 +76,7 @@ public class CategoryActivity extends AppCompatActivity {
         mItemTouchHelper = new ItemTouchHelper(new MyItemTouchHelperCallback(mRecyclerAdapter));
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
+        mRecyclerAdapter.setmItemTouchHelper(mItemTouchHelper);
         mRecyclerView.setAdapter(mRecyclerAdapter);
     }
 

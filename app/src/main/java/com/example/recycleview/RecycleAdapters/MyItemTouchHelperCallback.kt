@@ -1,12 +1,17 @@
 package com.example.recycleview.RecycleAdapters
 
 
+import android.graphics.Canvas
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_DRAG
+import android.util.Log
 import java.util.Collections
 
 class MyItemTouchHelperCallback(var recyclerAdapter: RecyclerAdapter) : ItemTouchHelper.Callback() {
+
+
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -33,10 +38,14 @@ class MyItemTouchHelperCallback(var recyclerAdapter: RecyclerAdapter) : ItemTouc
         dragged: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
+
+
         Collections.swap(recyclerAdapter.items, dragged.adapterPosition, target.adapterPosition)
         recyclerView.adapter!!.notifyItemMoved(dragged.adapterPosition, target.adapterPosition)
         return true
     }
+
+
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         viewHolder.itemView.alpha = 1.0f
@@ -48,7 +57,7 @@ class MyItemTouchHelperCallback(var recyclerAdapter: RecyclerAdapter) : ItemTouc
     }
 
     override fun isLongPressDragEnabled(): Boolean {
-        return true
+        return false
     }
 
     override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
@@ -60,6 +69,7 @@ class MyItemTouchHelperCallback(var recyclerAdapter: RecyclerAdapter) : ItemTouc
         current: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
+        recyclerAdapter.hideMenu()
         return recyclerAdapter.canDropOver(current.adapterPosition, target.adapterPosition)
     }
 }
