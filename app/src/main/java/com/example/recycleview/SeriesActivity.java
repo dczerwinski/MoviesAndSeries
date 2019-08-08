@@ -10,17 +10,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.recycleview.DataBase.AppDatabase;
 import com.example.recycleview.DataBase.DataBase;
 import com.example.recycleview.RecycleAdapters.ItemDecoration;
 import com.example.recycleview.RecycleAdapters.RecyclerAdapterSeries;
-
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -57,14 +53,11 @@ public class SeriesActivity extends AppCompatActivity {
         int uid = getIntent().getExtras().getInt("elo");
         series = AppDatabase.getAppDatabase(this).dataBaseDao().findById(uid);
 
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
-                    mCollapsingToolbarLayout.setTitle(series.title);
-                } else {
-                    mCollapsingToolbarLayout.setTitle("");
-                }
+        mAppBarLayout.addOnOffsetChangedListener((appBarLayout, i) -> {
+            if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
+                mCollapsingToolbarLayout.setTitle(series.title);
+            } else {
+                mCollapsingToolbarLayout.setTitle("");
             }
         });
 
@@ -93,7 +86,7 @@ public class SeriesActivity extends AppCompatActivity {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.d("elo", String.valueOf(dx) + "  " + String.valueOf(dy));
+                Log.d("elo", dx + "  " + String.valueOf(dy));
                 int firstItemVisible = mLinearLayoutManager.findFirstVisibleItemPosition();
                 if (firstItemVisible != 1 && firstItemVisible % itemList.size() == 1) {
                     mLinearLayoutManager.scrollToPosition(1);
@@ -107,14 +100,11 @@ public class SeriesActivity extends AppCompatActivity {
 
         });
 
-        tv_rezyser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), DirectorActivity.class);
-                intent.putExtra("dir", series.director);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                v.getContext().startActivity(intent);
-            }
+        tv_rezyser.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), DirectorActivity.class);
+            intent.putExtra("dir", series.director);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
         });
     }
 

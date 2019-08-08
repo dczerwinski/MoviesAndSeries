@@ -4,21 +4,16 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
-import android.widget.PopupMenu;
 import android.widget.Toast;
-
 import com.example.recycleview.RecycleAdapters.ItemDecoration;
 import com.example.recycleview.RecycleAdapters.ListItem;
 import com.example.recycleview.RecycleAdapters.MyItemTouchHelperCallback;
 import com.example.recycleview.RecycleAdapters.RecyclerAdapter;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -44,22 +39,16 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerAdapter mRecyclerAdapter = new RecyclerAdapter(this);
 
 
-        mAppBarLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Toast.makeText(view.getContext(), "Edit Mode ON", Toast.LENGTH_LONG).show();
-                return true;
-            }
+        mAppBarLayout.setOnLongClickListener(view -> {
+            Toast.makeText(view.getContext(), "Edit Mode ON", Toast.LENGTH_LONG).show();
+            return true;
         });
 
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
-                    mCollapsingToolbarLayout.setTitle("Filmy i seriale");
-                } else {
-                    mCollapsingToolbarLayout.setTitle("");
-                }
+        mAppBarLayout.addOnOffsetChangedListener((appBarLayout, i) -> {
+            if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
+                mCollapsingToolbarLayout.setTitle("Filmy i seriale");
+            } else {
+                mCollapsingToolbarLayout.setTitle("");
             }
         });
 
@@ -79,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
         mRecyclerAdapter.setmItemTouchHelper(mItemTouchHelper);
         mRecyclerView.setAdapter(mRecyclerAdapter);
+
+
 
 
     }

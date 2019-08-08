@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecycleAdapters.EditItemActivity"
-    android:background="#FF9800">
+    tools:context=".EditItemActivity"
+    android:background="#FF9800"
+    tools:ignore="MissingDefaultResource">
 
     <EditText
         android:id="@+id/edit_opis"

@@ -1,12 +1,9 @@
 package com.example.recycleview.RecycleAdapters
 
 
-import android.graphics.Canvas
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_DRAG
-import android.util.Log
 import java.util.Collections
 
 class MyItemTouchHelperCallback(var recyclerAdapter: RecyclerAdapter) : ItemTouchHelper.Callback() {

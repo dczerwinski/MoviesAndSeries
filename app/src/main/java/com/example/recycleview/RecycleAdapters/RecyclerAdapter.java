@@ -4,30 +4,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.example.recycleview.CategoryActivity;
 import com.example.recycleview.DataBase.AppDatabase;
 import com.example.recycleview.DataBase.DataBase;
+import com.example.recycleview.EditItemActivity;
 import com.example.recycleview.MovieActivity;
 import com.example.recycleview.R;
 import com.example.recycleview.SeriesActivity;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -57,10 +59,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     private Context context;
     private List<DataBase> dataBases;
     private ItemTouchHelper mItemTouchHelper;
-    private PopupMenu popupMenu;
+    private PopupWindow popupWindow;
 
     public void hideMenu(){
-        if(popupMenu!=null) popupMenu.dismiss();
+        if(popupWindow !=null) popupWindow.dismiss();
     }
 
     public void setmItemTouchHelper(ItemTouchHelper mItemTouchHelper) {
@@ -68,7 +70,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     }
 
     public RecyclerAdapter(Context context) {
-        popupMenu = null;
+        popupWindow = null;
         mItemTouchHelper=null;
         dataBases = AppDatabase.getAppDatabase(context).dataBaseDao().getAll();
         this.context = context;
@@ -77,7 +79,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
 
     public RecyclerAdapter(List<DataBase> dataBaseList, Context context) {
-        popupMenu = null;
+        popupWindow = null;
         mItemTouchHelper=null;
         this.dataBases = dataBaseList;
         this.context = context;
@@ -134,65 +136,111 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         }
 
 
-        mRecyclerViewHolder.mTextView.getRootView().setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
 
-                if(getItemViewType(position) != ListItem.TYPE_HEADER) {
-                    popupMenu = new PopupMenu(context, view);
-                    MenuInflater inflater = popupMenu.getMenuInflater();
-                    inflater.inflate(R.menu.item_menu, popupMenu.getMenu());
-                    // popupMenu.setGravity();
-                    popupMenu.show();
+        mRecyclerViewHolder.mTextView.getRootView().setOnLongClickListener(view -> {
 
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            if (menuItem.getTitle().equals("Edit")){
-                                Intent intent = new Intent(view.getContext(), EditItemActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                view.getContext().startActivity(intent);
-                            }
-                            else{
-                                //TODO
-                            }
-                            return true;
-                        }
-                    });
-                }
-                if(mItemTouchHelper!=null) mItemTouchHelper.startDrag(mRecyclerViewHolder);
-                return true;
-            }
-        });
 
-        mRecyclerViewHolder.mTextView.getRootView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View popupView = layoutInflater.inflate(R.layout.popup_layout,null);
+            popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setFocusable(true);
+
+            Button mButtonEdit =  popupView.findViewById(R.id.btn_Edit);
+            Button mButtonDelete = popupView.findViewById(R.id.btn_delete);
+
+            mButtonEdit.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), EditItemActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                v.getContext().startActivity(intent);
+                v.postDelayed(() -> popupWindow.dismiss(),300);
+            });
+
+
+            mButtonDelete.setOnClickListener(v -> {
+                String temp_catygory;
+                temp_catygory = items.get(position).category;
                 switch (getItemViewType(position)) {
                     case ListItem.TYPE_MOVIE:
-                        Intent intent = new Intent(v.getContext(), MovieActivity.class);
-                        intent.putExtra("elo", AppDatabase.getAppDatabase(context).dataBaseDao()
-                                .findByName(((List<MovieItem>) (Object) items).get(position)
-                                        .getTitle()).uid);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        v.getContext().startActivity(intent);
+                        AppDatabase.getAppDatabase(context).dataBaseDao()
+                                .deleteByTitle(((List<MovieItem>) (Object) items).get(position)
+                                        .getTitle());
+                        items.remove(position);
                         break;
                     case ListItem.TYPE_SERIES:
-                        Intent intent2 = new Intent(v.getContext(), SeriesActivity.class);
-                        intent2.putExtra("elo", AppDatabase.getAppDatabase(context).dataBaseDao()
-                                .findByName(((List<SeriesItem>) (Object) items).get(position)
-                                        .getTitle()).uid);
-                        intent2.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        v.getContext().startActivity(intent2);
+                        AppDatabase.getAppDatabase(context).dataBaseDao()
+                                .deleteByTitle(((List<SeriesItem>) (Object) items).get(position)
+                                        .getTitle());
+
+                        items.remove(position);
                         break;
                     case ListItem.TYPE_HEADER:
-                        Intent intent3 = new Intent(v.getContext(), CategoryActivity.class);
-                        intent3.putExtra("elo",
-                                ((List<HeaderItem>) (Object) items).get(position).getCategory());
-                        intent3.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        v.getContext().startActivity(intent3);
+                        AppDatabase.getAppDatabase(context).dataBaseDao()
+                                .deleteCatygory(((List<HeaderItem>) (Object) items).get(position).getCategory());
+
+                        final String temp = items.get(position).category;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            items.removeIf(x -> x.category == temp);
+                        }
                         break;
                 }
+                int temp = 0;
+                for(ListItem item: items){
+                    if(item.category.equals(temp_catygory))temp++;
+                }
+                Log.d("ilekaty", String.valueOf(temp));
+                if(temp == 1){
+                    for(Iterator iterator = items.iterator(); iterator.hasNext();){
+                        ListItem item = (ListItem) iterator.next();
+                        if(item.category.equals(temp_catygory)){
+                            iterator.remove();
+                        }
+                    }
+
+                    Log.d("ilekaty", "after");
+                }
+
+                v.postDelayed(() -> popupWindow.dismiss(),300);
+
+                v.post(() -> {
+                    notifyItemRemoved(position);
+                    notifyDataSetChanged();
+                    Toast.makeText(context,"Item deleted!",Toast.LENGTH_SHORT).show();
+                });
+            });
+
+            popupWindow.showAtLocation(view, Gravity.CENTER, (int) mRecyclerViewHolder.mTextView.getX(),(int)mRecyclerViewHolder.mTextView.getY());
+
+            if(mItemTouchHelper!=null) mItemTouchHelper.startDrag(mRecyclerViewHolder);
+            return true;
+        });
+
+        mRecyclerViewHolder.mTextView.getRootView().setOnClickListener(v -> {
+            Intent intent;
+            switch (getItemViewType(position)) {
+                case ListItem.TYPE_MOVIE:
+                    intent = new Intent(v.getContext(), MovieActivity.class);
+                    intent.putExtra("elo", AppDatabase.getAppDatabase(context).dataBaseDao()
+                            .findByName(((List<MovieItem>) (Object) items).get(position)
+                                    .getTitle()).uid);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    v.getContext().startActivity(intent);
+                    break;
+                case ListItem.TYPE_SERIES:
+                    intent = new Intent(v.getContext(), SeriesActivity.class);
+                    intent.putExtra("elo", AppDatabase.getAppDatabase(context).dataBaseDao()
+                            .findByName(((List<SeriesItem>) (Object) items).get(position)
+                                    .getTitle()).uid);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    v.getContext().startActivity(intent);
+                    break;
+                case ListItem.TYPE_HEADER:
+                    intent = new Intent(v.getContext(), CategoryActivity.class);
+                    intent.putExtra("elo",
+                            ((List<HeaderItem>) (Object) items).get(position).getCategory());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    v.getContext().startActivity(intent);
+                    break;
             }
         });
     }
@@ -208,12 +256,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     }
 
     private void init() {
-        Collections.sort(dataBases, new Comparator<DataBase>() {
-            @Override
-            public int compare(DataBase t0, DataBase t1) {
-                return t0.title.compareTo(t1.title);
-            }
-        });
+        Collections.sort(dataBases, (t0, t1) -> t0.title.compareTo(t1.title));
 
         Collections.reverse(dataBases);
 
@@ -233,32 +276,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
                 categories.add(dataBase.category);
             }
         }
-        Collections.sort(items, new Comparator<ListItem>() {
-            @Override
-            public int compare(ListItem t0, ListItem t1) {
-                return t0.getCategory().compareTo(t1.getCategory());
-            }
-        });
+        Collections.sort(items, (t0, t1) -> t0.getCategory().compareTo(t1.getCategory()));
 
         for (String category : categories) {
             items.add(new HeaderItem(category));
         }
         Collections.reverse(items);
-        Collections.sort(items, new Comparator<ListItem>() {
-            @Override
-            public int compare(ListItem t0, ListItem t1) {
-                return t0.getCategory().compareTo(t1.getCategory());
-            }
-        });
+        Collections.sort(items, (t0, t1) -> t0.getCategory().compareTo(t1.getCategory()));
     }
 
     private void init_no_main() {
-        Collections.sort(dataBases, new Comparator<DataBase>() {
-            @Override
-            public int compare(DataBase t0, DataBase t1) {
-                return t0.title.compareTo(t1.title);
-            }
-        });
+        Collections.sort(dataBases, (t0, t1) -> t0.title.compareTo(t1.title));
         for (DataBase dataBase : dataBases) {
             switch (dataBase.type) {
                 case "movie":

@@ -9,10 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.recycleview.DataBase.AppDatabase;
 import com.example.recycleview.DataBase.DataBase;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -59,14 +57,11 @@ public class MovieActivity extends AppCompatActivity {
         }
 
 
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
-                    mCollapsingToolbarLayout.setTitle(movie.title);
-                } else {
-                    mCollapsingToolbarLayout.setTitle("");
-                }
+        mAppBarLayout.addOnOffsetChangedListener((appBarLayout, i) -> {
+            if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
+                mCollapsingToolbarLayout.setTitle(movie.title);
+            } else {
+                mCollapsingToolbarLayout.setTitle("");
             }
         });
 
@@ -74,14 +69,11 @@ public class MovieActivity extends AppCompatActivity {
         imageView.setImageResource(this.getResources()
                 .getIdentifier(movie.img_file, "drawable", this.getPackageName()));
 
-        tv_rezyser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), DirectorActivity.class);
-                intent.putExtra("dir", movie.director);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                view.getContext().startActivity(intent);
-            }
+        tv_rezyser.setOnClickListener(view -> {
+            Intent intent = new Intent(view.getContext(), DirectorActivity.class);
+            intent.putExtra("dir", movie.director);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            view.getContext().startActivity(intent);
         });
     }
 

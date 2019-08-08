@@ -29,12 +29,7 @@ public abstract class AppDatabase  extends RoomDatabase {
                             dataBases.add(new DataBase("Pirates of the Caribbean At World's End", " Gore Verbinski", "potcawe", "movie", 10, "Pirates"));
                             dataBases.add(new DataBase("Grey's Anatomy", "Shonda Rhimes", "ga", "series", 338, "Medicine"));
 
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getAppDatabase(context).dataBaseDao().insertAll(dataBases);
-                                }
-                            }).start();
+                            new Thread(() -> getAppDatabase(context).dataBaseDao().insertAll(dataBases)).start();
                         }
                     }).allowMainThreadQueries().build();
 

@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-</android.support.constraint.ConstraintLayout>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="@drawable/ripple_left"
+            android:background="@drawable/radius_left"
+            android:text="Edit"
+            android:id="@+id/btn_Edit"
+            android:layout_gravity="center_vertical" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="@drawable/ripple_right"
+            android:background="@drawable/radius_right"
+            android:text="Delete"
+            android:id="@+id/btn_delete"
+            android:layout_gravity="center_vertical" />
+</LinearLayout>

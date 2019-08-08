@@ -5,12 +5,10 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import com.example.recycleview.DataBase.AppDatabase;
 import com.example.recycleview.RecycleAdapters.ItemDecoration;
 import com.example.recycleview.RecycleAdapters.ListItem;
 import com.example.recycleview.RecycleAdapters.RecyclerAdapter;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

@@ -9,16 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.widget.TextView;
-
 import com.example.recycleview.DataBase.AppDatabase;
 import com.example.recycleview.DataBase.DataBase;
 import com.example.recycleview.RecycleAdapters.ItemDecoration;
 import com.example.recycleview.RecycleAdapters.ListItem;
 import com.example.recycleview.RecycleAdapters.MyItemTouchHelperCallback;
 import com.example.recycleview.RecycleAdapters.RecyclerAdapter;
-
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -44,14 +41,11 @@ public class CategoryActivity extends AppCompatActivity {
         final String title = getIntent().getExtras().getString("elo");
         tv_title.setText("\n" + title);
         tv_title.setTextSize(50);
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
-                    mCollapsingToolbarLayout.setTitle(title);
-                } else {
-                    mCollapsingToolbarLayout.setTitle("");
-                }
+        mAppBarLayout.addOnOffsetChangedListener((appBarLayout, i) -> {
+            if (i == -mCollapsingToolbarLayout.getHeight() + mToolbar.getHeight()) {
+                mCollapsingToolbarLayout.setTitle(title);
+            } else {
+                mCollapsingToolbarLayout.setTitle("");
             }
         });
 

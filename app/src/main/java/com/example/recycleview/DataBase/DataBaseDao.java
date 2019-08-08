@@ -1,6 +1,7 @@
 package com.example.recycleview.DataBase;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
@@ -23,6 +24,12 @@ public interface DataBaseDao {
 
     @Query("select * from movies where category like :cat")
     List<DataBase> findByCategory(String cat);
+
+    @Query("delete  from movies where title like :vtitle")
+    void deleteByTitle(String vtitle);
+
+    @Query("delete from movies where category like :vcat")
+    void deleteCatygory(String vcat);
 
     @Insert
     void insertAll(DataBase... dataBases);

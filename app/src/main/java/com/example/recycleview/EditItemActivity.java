@@ -1,9 +1,7 @@
-package com.example.recycleview.RecycleAdapters;
+package com.example.recycleview;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import com.example.recycleview.R;
 
 public class EditItemActivity extends AppCompatActivity {
 
