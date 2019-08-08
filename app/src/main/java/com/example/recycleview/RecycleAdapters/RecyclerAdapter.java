@@ -1,5 +1,6 @@
 package com.example.recycleview.RecycleAdapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,7 +11,9 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,10 +39,12 @@ import java.util.List;
 class RecyclerViewHolder extends RecyclerView.ViewHolder {
     TextView mTextView;
     ImageView mImageView;
+    View mView;
 
     public RecyclerViewHolder(@NonNull View itemView) {
         super(itemView);
         mTextView = itemView.findViewById(R.id.txtDescription);
+        mView = itemView;
     }
 
     public void setTextViewBackground(Context context, String id) {
@@ -137,7 +142,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
 
 
-        mRecyclerViewHolder.mTextView.getRootView().setOnLongClickListener(view -> {
+        mRecyclerViewHolder.mView.setOnLongClickListener(view -> {
 
 
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -209,13 +214,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
                 });
             });
 
-            popupWindow.showAtLocation(view, Gravity.CENTER, (int) mRecyclerViewHolder.mTextView.getX(),(int)mRecyclerViewHolder.mTextView.getY());
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+            if(getItemViewType(position) != ListItem.TYPE_SERIES) popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, displayMetrics.widthPixels/4,(int)view.getY());
+            else popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) view.getX(),(int)view.getY());
 
             if(mItemTouchHelper!=null) mItemTouchHelper.startDrag(mRecyclerViewHolder);
             return true;
         });
 
-        mRecyclerViewHolder.mTextView.getRootView().setOnClickListener(v -> {
+        mRecyclerViewHolder.mView.setOnClickListener(v -> {
             Intent intent;
             switch (getItemViewType(position)) {
                 case ListItem.TYPE_MOVIE:
