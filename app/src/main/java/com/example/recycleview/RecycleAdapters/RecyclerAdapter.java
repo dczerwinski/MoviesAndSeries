@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -214,12 +215,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
                 });
             });
 
+            int[] location = new int[2];
+            mRecyclerViewHolder.mView.getLocationInWindow(location);
+
 
             DisplayMetrics displayMetrics = new DisplayMetrics();
             ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-            if(getItemViewType(position) != ListItem.TYPE_SERIES) popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, displayMetrics.widthPixels/4,(int)view.getY());
-            else popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) view.getX(),(int)view.getY());
+
+            if(getItemViewType(position) != ListItem.TYPE_SERIES) popupWindow.showAtLocation(view, Gravity.NO_GRAVITY,displayMetrics.widthPixels/4 ,location[1]-150);
+            else popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) view.getX(),location[1]-150);
 
             if(mItemTouchHelper!=null) mItemTouchHelper.startDrag(mRecyclerViewHolder);
             return true;
