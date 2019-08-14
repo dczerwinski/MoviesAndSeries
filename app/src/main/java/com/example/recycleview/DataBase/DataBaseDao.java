@@ -10,7 +10,7 @@ import java.util.List;
 
 @Dao
 public interface DataBaseDao {
-    @Query("SELECT * FROM movies")
+    @Query("SELECT * FROM movies ORDER BY title ASC")
     List<DataBase> getAll();
 
     @Query("SELECT * FROM movies WHERE title like :vtitle limit 1")

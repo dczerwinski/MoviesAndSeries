@@ -1,6 +1,7 @@
 package com.example.recycleview;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 import android.widget.Toast;
 import com.example.recycleview.RecycleAdapters.ItemDecoration;
 import com.example.recycleview.RecycleAdapters.ListItem;
@@ -68,10 +70,6 @@ public class MainActivity extends AppCompatActivity {
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
         mRecyclerAdapter.setmItemTouchHelper(mItemTouchHelper);
         mRecyclerView.setAdapter(mRecyclerAdapter);
-
-
-
-
     }
 }
 

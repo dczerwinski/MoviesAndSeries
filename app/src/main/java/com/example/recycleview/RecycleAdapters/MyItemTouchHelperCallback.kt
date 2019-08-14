@@ -8,17 +8,24 @@ import java.util.Collections
 
 class MyItemTouchHelperCallback(var recyclerAdapter: RecyclerAdapter) : ItemTouchHelper.Callback() {
 
-
-
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        var dragFlags: Int = if (recyclerView.adapter!!.getItemViewType(viewHolder.adapterPosition) == ListItem.TYPE_HEADER) 0
-        else ItemTouchHelper.UP or ItemTouchHelper.DOWN or
+
+        if(recyclerView.adapter!!.getItemViewType(viewHolder.adapterPosition) == ListItem.TYPE_HEADER){
+            recyclerAdapter.hideAllItemsWithCat(recyclerAdapter.items.get(viewHolder.adapterPosition).category)
+        }
+        var dragFlags:Int = ItemTouchHelper.UP or ItemTouchHelper.DOWN or
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
 
-        var swipeFlags: Int = 0
+
+        /*
+        var dragFlags: Int = (if (recyclerView.adapter!!.getItemViewType(viewHolder.adapterPosition) == ListItem.TYPE_HEADER) 0
+        else ItemTouchHelper.UP or ItemTouchHelper.DOWN or
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) as Int
+*/
+        var swipeFlags = 0
 
         return makeMovementFlags(dragFlags, swipeFlags)
     }
@@ -39,6 +46,7 @@ class MyItemTouchHelperCallback(var recyclerAdapter: RecyclerAdapter) : ItemTouc
 
         Collections.swap(recyclerAdapter.items, dragged.adapterPosition, target.adapterPosition)
         recyclerView.adapter!!.notifyItemMoved(dragged.adapterPosition, target.adapterPosition)
+
         return true
     }
 

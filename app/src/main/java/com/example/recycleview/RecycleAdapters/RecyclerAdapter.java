@@ -104,8 +104,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         switch (viewType) {
             case ListItem.TYPE_HEADER:
                 return new RecyclerViewHolder(
-                        inflater.inflate(R.layout.layout_item_recycler_view_category, parent,
-                                false));
+                        inflater.inflate(R.layout.layout_item_recycler_view_category, parent, false));
             case ListItem.TYPE_MOVIE:
                 return new RecyclerViewHolder(
                         inflater.inflate(R.layout.layout_item_recycler_view, parent, false));
@@ -145,9 +144,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
         mRecyclerViewHolder.mView.setOnLongClickListener(view -> {
 
-
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View popupView = layoutInflater.inflate(R.layout.popup_layout,null);
+            popupView.setAlpha(1f);
             popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
             popupWindow.setOutsideTouchable(true);
             popupWindow.setFocusable(true);
@@ -157,11 +156,34 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
             mButtonEdit.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), EditItemActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                v.getContext().startActivity(intent);
-                v.postDelayed(() -> popupWindow.dismiss(),300);
-            });
 
+                switch (getItemViewType(position)){
+                    case ListItem.TYPE_HEADER:
+                        intent.putExtra("edit",AppDatabase.getAppDatabase(context).dataBaseDao().
+                                findByName(((List<HeaderItem>) (Object)items).get(position).getCategory()).uid);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        v.getContext().startActivity(intent);
+                        v.postDelayed(() -> popupWindow.dismiss(),300);
+                        break;
+                    case ListItem.TYPE_MOVIE:
+                        intent.putExtra("edit",AppDatabase.getAppDatabase(context).dataBaseDao().
+                                findByName(((List<MovieItem>) (Object)items).get(position).getTitle()).uid);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        v.getContext().startActivity(intent);
+                        v.postDelayed(() -> popupWindow.dismiss(),300);
+                        break;
+                    case ListItem.TYPE_SERIES:
+                        intent.putExtra("edit",AppDatabase.getAppDatabase(context).dataBaseDao().
+                                findByName(((List<SeriesItem>) (Object)items).get(position).getTitle()).uid);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        v.getContext().startActivity(intent);
+                        v.postDelayed(() -> popupWindow.dismiss(),300);
+                        break;
+               }
+
+
+
+            });
 
             mButtonDelete.setOnClickListener(v -> {
                 String temp_catygory;
@@ -194,7 +216,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
                 for(ListItem item: items){
                     if(item.category.equals(temp_catygory))temp++;
                 }
-                Log.d("ilekaty", String.valueOf(temp));
                 if(temp == 1){
                     for(Iterator iterator = items.iterator(); iterator.hasNext();){
                         ListItem item = (ListItem) iterator.next();
@@ -202,8 +223,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
                             iterator.remove();
                         }
                     }
-
-                    Log.d("ilekaty", "after");
                 }
 
                 v.postDelayed(() -> popupWindow.dismiss(),300);
@@ -317,12 +336,26 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     }
 
     public boolean canDropOver(int current, int target) {
+        if(items.get(current).getType() == items.get(target).getType() && items.get(current).getType() == ListItem.TYPE_HEADER){
+            return true;
+        }
         if (!items.get(current).category.equals(items.get(target).category)) {
             return false;
         }
         if (items.get(target).getType() == ListItem.TYPE_HEADER) {
             return false;
         }
+        if(items.get(current).category.equals(items.get(target).category) && items.get(current).getType() == ListItem.TYPE_HEADER){
+            return false;
+        }
         return true;
+    }
+
+    public void hideAllItemsWithCat(String cat){
+        for(int i=0; i<getItemCount(); i++){
+            if(items.get(i).category.equals(cat) && getItemViewType(i) != ListItem.TYPE_HEADER){
+                //notifyItemRemoved(i);
+            }
+        }
     }
 }
