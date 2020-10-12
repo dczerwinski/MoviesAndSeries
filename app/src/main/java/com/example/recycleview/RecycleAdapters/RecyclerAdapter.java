@@ -58,6 +58,8 @@ class RecyclerViewHolder extends RecyclerView.ViewHolder {
         this.mImageView.setImageDrawable(rnd);
 
         
+
+
     }
 }
 
