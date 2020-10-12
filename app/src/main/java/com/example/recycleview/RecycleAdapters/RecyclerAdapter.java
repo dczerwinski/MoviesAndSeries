@@ -56,6 +56,8 @@ class RecyclerViewHolder extends RecyclerView.ViewHolder {
                 RoundedBitmapDrawableFactory.create(context.getResources(), bitmapFactory);
         rnd.setCornerRadius(90);
         this.mImageView.setImageDrawable(rnd);
+
+        
     }
 }
 
